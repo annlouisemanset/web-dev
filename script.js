@@ -5,6 +5,9 @@ const payBtn = document.getElementById('payBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 const paymentStep = document.getElementById('paymentStep');
 const processingStep = document.getElementById('processingStep');
+const receiptStep = document.getElementById('receiptStep');
+const closeReceiptBtn = document.getElementById('closeReceiptBtn');
+const refNo = document.getElementById('refNo');
 const gcashInput = document.getElementById('gcashNumber');
 
 let current = '0';
@@ -82,6 +85,7 @@ function toPercent() {
 function showPaywall() {
     paymentStep.classList.remove('hidden');
     processingStep.classList.add('hidden');
+    receiptStep.classList.add('hidden');
     gcashInput.value = '';
     gcashInput.style.borderColor = '#ccc';
     gcashInput.placeholder = '09XX XXX XXXX';
@@ -90,6 +94,10 @@ function showPaywall() {
 
 function hidePaywall() {
     overlay.classList.remove('show');
+}
+
+function randomRefNo() {
+    return Math.floor(1000000000 + Math.random() * 9000000000);
 }
 
 payBtn.addEventListener('click', () => {
@@ -106,13 +114,19 @@ payBtn.addEventListener('click', () => {
     processingStep.classList.remove('hidden');
 
     setTimeout(() => {
-        hidePaywall();
-        if (pendingResult !== null) {
-            current = pendingResult.toString();
-            pendingResult = null;
-            updateDisplay();
-        }
+        processingStep.classList.add('hidden');
+        refNo.textContent = randomRefNo();
+        receiptStep.classList.remove('hidden');
     }, 2000);
+});
+
+closeReceiptBtn.addEventListener('click', () => {
+    hidePaywall();
+    if (pendingResult !== null) {
+        current = pendingResult.toString();
+        pendingResult = null;
+        updateDisplay();
+    }
 });
 
 cancelBtn.addEventListener('click', () => {
