@@ -5,6 +5,7 @@ const payBtn = document.getElementById('payBtn');
 const cancelBtn = document.getElementById('cancelBtn');
 const paymentStep = document.getElementById('paymentStep');
 const processingStep = document.getElementById('processingStep');
+const gcashInput = document.getElementById('gcashNumber');
 
 let current = '0';
 let previous = null;
@@ -49,7 +50,6 @@ function runCalculation() {
     const a = parseFloat(previous);
     const b = parseFloat(current);
     let result;
-
     switch (operator) {
         case '+': result = a + b; break;
         case '-': result = a - b; break;
@@ -57,7 +57,6 @@ function runCalculation() {
         case '/': result = b === 0 ? 'Error' : a / b; break;
         default: return null;
     }
-
     operator = null;
     previous = null;
     resetNext = true;
@@ -83,6 +82,9 @@ function toPercent() {
 function showPaywall() {
     paymentStep.classList.remove('hidden');
     processingStep.classList.add('hidden');
+    gcashInput.value = '';
+    gcashInput.style.borderColor = '#ccc';
+    gcashInput.placeholder = '09XX XXX XXXX';
     overlay.classList.add('show');
 }
 
@@ -91,6 +93,15 @@ function hidePaywall() {
 }
 
 payBtn.addEventListener('click', () => {
+    const number = gcashInput.value.trim();
+
+    if (!/^09\d{9}$/.test(number)) {
+        gcashInput.style.borderColor = 'red';
+        gcashInput.placeholder = 'Enter a valid 11-digit number';
+        gcashInput.value = '';
+        return;
+    }
+
     paymentStep.classList.add('hidden');
     processingStep.classList.remove('hidden');
 
@@ -112,7 +123,6 @@ buttons.forEach(btn => {
     btn.addEventListener('click', () => {
         const value = btn.dataset.value;
         const action = btn.dataset.action;
-
         if (value && !btn.classList.contains('operator')) {
             if (value === '.') {
                 inputDecimal();
