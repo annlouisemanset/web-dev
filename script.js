@@ -1,10 +1,16 @@
 const display = document.getElementById('display');
 const buttons = document.querySelectorAll('.btn');
+const overlay = document.getElementById('overlay');
+const payBtn = document.getElementById('payBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const paymentStep = document.getElementById('paymentStep');
+const processingStep = document.getElementById('processingStep');
 
 let current = '0';
 let previous = null;
 let operator = null;
 let resetNext = false;
+let pendingResult = null;
 
 function updateDisplay() {
     display.textContent = current;
@@ -31,15 +37,15 @@ function inputDecimal() {
 
 function setOperator(op) {
     if (operator && !resetNext) {
-        calculate();
+        runCalculation();
     }
     previous = current;
     operator = op;
     resetNext = true;
 }
 
-function calculate() {
-    if (operator === null || previous === null) return;
+function runCalculation() {
+    if (operator === null || previous === null) return null;
     const a = parseFloat(previous);
     const b = parseFloat(current);
     let result;
@@ -49,13 +55,13 @@ function calculate() {
         case '-': result = a - b; break;
         case '*': result = a * b; break;
         case '/': result = b === 0 ? 'Error' : a / b; break;
-        default: return;
+        default: return null;
     }
 
-    current = result.toString();
     operator = null;
     previous = null;
     resetNext = true;
+    return result;
 }
 
 function clearAll() {
@@ -63,6 +69,7 @@ function clearAll() {
     previous = null;
     operator = null;
     resetNext = false;
+    pendingResult = null;
 }
 
 function toggleSign() {
@@ -72,6 +79,34 @@ function toggleSign() {
 function toPercent() {
     current = (parseFloat(current) / 100).toString();
 }
+
+function showPaywall() {
+    paymentStep.classList.remove('hidden');
+    processingStep.classList.add('hidden');
+    overlay.classList.add('show');
+}
+
+function hidePaywall() {
+    overlay.classList.remove('show');
+}
+
+payBtn.addEventListener('click', () => {
+    paymentStep.classList.add('hidden');
+    processingStep.classList.remove('hidden');
+
+    setTimeout(() => {
+        hidePaywall();
+        if (pendingResult !== null) {
+            current = pendingResult.toString();
+            pendingResult = null;
+            updateDisplay();
+        }
+    }, 2000);
+});
+
+cancelBtn.addEventListener('click', () => {
+    hidePaywall();
+});
 
 buttons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -84,19 +119,26 @@ buttons.forEach(btn => {
             } else {
                 inputDigit(value);
             }
+            updateDisplay();
         } else if (btn.classList.contains('operator') && value) {
             setOperator(value);
+            updateDisplay();
         } else if (action === 'equals') {
-            calculate();
+            const result = runCalculation();
+            if (result !== null) {
+                pendingResult = result;
+                showPaywall();
+            }
         } else if (action === 'clear') {
             clearAll();
+            updateDisplay();
         } else if (action === 'sign') {
             toggleSign();
+            updateDisplay();
         } else if (action === 'percent') {
             toPercent();
+            updateDisplay();
         }
-
-        updateDisplay();
     });
 });
 
