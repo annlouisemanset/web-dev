@@ -144,6 +144,26 @@ body {
     filter: brightness(1.1);
 }
 
+#gcashNumber {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-align: center;
+    outline: none;
+}
+
+#gcashNumber:focus {
+    border-color: #007dfe;
+}
+
+.pay-btn:disabled {
+    background: #b0b0b0;
+    cursor: not-allowed;
+}
+
 .cancel-btn {
     width: 100%;
     background: transparent;
