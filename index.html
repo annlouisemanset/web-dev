@@ -51,9 +51,21 @@
 </div>
 
             <div id="processingStep" class="hidden">
-                <div class="spinner"></div>
-                <p>Processing payment...</p>
-            </div>
+    <div class="spinner"></div>
+    <p>Processing payment...</p>
+</div>
+
+<div id="receiptStep" class="hidden">
+    <div class="receipt-check">✅</div>
+    <h2>Payment Sent!</h2>
+    <div class="receipt-box">
+        <div class="receipt-row"><span>Amount</span><span>₱599.00</span></div>
+        <div class="receipt-row"><span>To</span><span>Definitely Not A Scam Inc.</span></div>
+        <div class="receipt-row"><span>Ref No.</span><span id="refNo"></span></div>
+        <div class="receipt-row"><span>Status</span><span>Success 🎉</span></div>
+    </div>
+    <button class="pay-btn" id="closeReceiptBtn">Show me the answer!</button>
+</div>
         </div>
     </div>
     <script src="script.js"></script>
