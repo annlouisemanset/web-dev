@@ -35,7 +35,26 @@
             <button class="btn operator equals" data-action="equals">=</button>
         </div>
     </div>
+    <!-- Paywall prank modal -->
+    <div class="overlay" id="overlay">
+        <div class="paywall">
+            <div class="paywall-icon">🔒</div>
+            <h2>Answer Locked</h2>
+            <p>To view your result, please pay a small processing fee of</p>
+            <div class="price">₱599.00</div>
+            <p class="gcash-label">via GCash</p>
 
+            <div id="paymentStep">
+                <button class="pay-btn" id="payBtn">Pay with GCash</button>
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+            </div>
+
+            <div id="processingStep" class="hidden">
+                <div class="spinner"></div>
+                <p>Processing payment...</p>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
